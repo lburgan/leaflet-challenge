@@ -1,8 +1,8 @@
 let url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
-d3.json(url).then(data => createFeatures(data));
 
-function createMap(earthquakes){
+
+
     let streetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
@@ -11,20 +11,15 @@ function createMap(earthquakes){
         "Street Map": streetmap
     };
 
-    let overlayMaps = {
-        "Earthquakes": earthquakes
-    };
 
     let map = L.map("map", {
         center: [37.09, -95.71],
         zoom: 5,
-        layers: [streetmap, earthquakes]
+        layers: streetmap
     });
     
-    L.control.layers(baseMaps, overlayMaps, {
-        collapsed: false
-      }).addTo(map);
-};
+   
+
 
 function colorCircle(depth){
     let color = " ";
@@ -45,24 +40,16 @@ function colorCircle(depth){
 
 };
 
-function sizeCircle(mag){
-    return mag*2000;
-};
-function createFeatures(response){
-    let jsonData = response.features;
-    let earthquakes = [];
-    for(let index = 0; index<jsonData.length; index ++){
-        let quake = jsonData[index];
 
-        let quakeMarker ={
-            radius: sizeCircle(quake.properties.mag),
-            fillColor:  colorCircle(quake.geometry.coordinates[2]),
-            fillOpacity: 0.7,
-            color: "black"
-        };
-        let quakeCircle = L.Circle([quake.geometry.coordinates[1],quake.geometry.coordinates[0]],quakeMarker).bindPopup(`Code Working`)
-        earthquakes.push(quakeCircle);
+d3.json(url).then(function(data){
+    let quakes = data.features;
+    for(i=0;0<quakes.length;i++){
+       let quake = quake[i];
+       L.circle([quake.geometry.coordinates[1],quake.geometry.coordinates[0]],{
+        radius: quake.properties.mag * 10,
+        color: colorCircle(quake.geometry.coordinates[2])
+       }).bindPopup(`This code works`);
+
     };
-    console.log(earthquakes);
-    createMap(L.layerGroup(earthquakes))
-};
+
+});
