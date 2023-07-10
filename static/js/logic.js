@@ -54,13 +54,15 @@ function createFeatures(response){
     for(let index = 0; index<jsonData.length; index ++){
         let quake = jsonData[index];
 
-        let quakeMarker = L.marker([quake.geometry.coordinates[0],quake.geometry.coordinates[1]],{
+        let quakeMarker ={
             radius: sizeCircle(quake.properties.mag),
             fillColor:  colorCircle(quake.geometry.coordinates[2]),
             fillOpacity: 0.7,
             color: "black"
-        }).bindPopup(`<h3>Location: ${quake.properties.place}</h3><hr><p>Date: ${new Date(quake.properties.time)}</p><p>Magnitude: ${quake.properties.mag}</p><p>Depth: ${quake.geometry.coordinates[2]}</p>`);
-        earthquakes.push(quakeMarker);
+        };
+        let quakeCircle = L.Circle([quake.geometry.coordinates[1],quake.geometry.coordinates[0]],quakeMarker).bindPopup(`Code Working`)
+        earthquakes.push(quakeCircle);
     };
+    console.log(earthquakes);
     createMap(L.layerGroup(earthquakes))
 };
